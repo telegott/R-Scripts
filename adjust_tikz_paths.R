@@ -6,9 +6,10 @@ pacman::p_load(glue, crayon, tidyverse)
 all_tikz_files <- list.files(pattern = '\\.tikz$', recursive = TRUE, full.names = TRUE)
 
 tikz_files_with_figures <- all_tikz_files %>% 
-  keep(~ read_lines(.) %>% 
-         str_detect(fixed('ras1}}')) %>%
-         any
+  keep(
+    ~ read_lines(.) %>% 
+    str_detect(fixed('ras1}}')) %>%
+    any
   ) 
 
 for (tikz_file in tikz_files_with_figures) {
@@ -23,8 +24,7 @@ for (tikz_file in tikz_files_with_figures) {
   if (length(lines_with_figure_links) == 0) {
     cat(crayon::red(paste0(tikz_file, ' does not link to correct file! \n')))
     next
-  }
-  
+  }  
   
   for (line in lines_with_figure_links) {
     
@@ -47,6 +47,7 @@ for (tikz_file in tikz_files_with_figures) {
     if (current_path == new_path) {
       cat(glue::glue(crayon::green('File {tikz_file} already contained a correct path.\n')))
     } else {
+      
       tikz_file_content[line] <- current_line %>% str_replace(fixed(current_path), new_path)
       
       message <- paste0(
@@ -65,20 +66,7 @@ for (tikz_file in tikz_files_with_figures) {
     
   }
   
-  
 }
-
-
-
-
-
-
-# 
-# 
-# pattern <- '[{]\\w+[}]'
-
-
-
 
 
 
